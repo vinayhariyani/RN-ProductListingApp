@@ -6,9 +6,11 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ApiCall from '../utils/Apicall';
 import Colors from '../utils/Colors';
+import { useNavigation } from '@react-navigation/native';
 
 const ProductListing = () => {
 
+    const navigation = useNavigation();
     const [productsData, setProductsData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -49,8 +51,15 @@ const ProductListing = () => {
         );
     };
 
+    const toDetailsPage = (id) => {
+        navigation.navigate("ProductDetails", id);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.productBannerView}>
+                <Text style={styles.productBannerText}>Products</Text>
+            </View>
             <View style={styles.parentContainer}>
                 {
                     productsData ? (
@@ -58,7 +67,7 @@ const ProductListing = () => {
                             data={productsData}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => (
-                                <TouchableOpacity key={item.id} style={styles.cardMain}>
+                                <TouchableOpacity onPress={() => toDetailsPage(item.id)} key={item.id} style={styles.cardMain}>
                                     <View style={styles.cardImageView}>
                                         <Image
                                             resizeMode='contain'
@@ -113,6 +122,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.backgroundPrimary,
+    },
+    productBannerView: {
+        flexDirection: "row",
+        alignItems: 'center',
+        paddingVertical: verticalScale(15),
+        paddingHorizontal: scale(10),
+        backgroundColor: Colors.headerBgColor
+    },
+    productBannerText: {
+        marginLeft: scale(10),
+        fontSize: 20,
+        color: '#000',
+        fontWeight: '500'
     },
     parentContainer: {
         flex: 1,
